@@ -23,3 +23,6 @@ Welcome to the **IDX Financial Assistant**, an AI-powered assistant that can ans
 
    ```bash
    git clone https://github.com/xxx
+2. Requirements.txt
+   ```bash
+   pip install requirements.txt
