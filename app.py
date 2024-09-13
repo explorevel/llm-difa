@@ -37,7 +37,7 @@ with st.sidebar:
 # SECTORS_API_KEY = os.getenv("SECTORS_API_KEY")
 # GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 # CALENDAR_API_KEY = os.getenv("CALENDAR_API_KEY")
-CALENDAR_API_KEY = st.secrets("CALENDAR_API_KEY")
+CALENDAR_API_KEY = st.secrets["CALENDAR_API_KEY"]
 
 def retrieve_from_endpoint(url: str) -> dict:
     headers = {"Authorization": SECTORS_API_KEY}
