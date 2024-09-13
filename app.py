@@ -94,7 +94,7 @@ def date_handler(start_date:str, end_date:str):
     temp_start_date = datetime.strptime(closest_trading_day(start_date, 'forward'), '%Y-%m-%d').date()
     temp_end_date = datetime.strptime(closest_trading_day(end_date, 'backward'), '%Y-%m-%d').date()
     if (temp_end_date - temp_start_date).days < 0:
-        temp_start_date = temp_end_date
+        temp_end_date = temp_start_date
     return str(temp_start_date), str(temp_end_date)
 
 
@@ -128,7 +128,6 @@ def get_performance_since_ipo(stock: str) -> str:
     Get company performance since its IPO listing date including 7 days percentages change,
     30 days percentages change etc.
     """
-    
     url = f"https://api.sectors.app/v1/listing-performance/{stock.upper()}/"
     # Iterate through each key in the dictionary
     data = json.loads(retrieve_from_endpoint(url))
@@ -257,8 +256,8 @@ def LLM_Chat():
             (
                 "system",
                 f"""
-                you are IDX digital financial assistant called Difa. Dont give buy or any
-                financial advise since you are not an advisor, just give answers.
+                you are IDX digital financial assistant called Difa. Always 
+                remove '.JK' or '.jk' from stock name input, only use 4 digit code on stock name.
                 Answer the following queries, being as factual and analytical 
                 as you can. If you need the start and end dates but they are not 
                 explicitly provided, infer from the query. If the volume was about 
@@ -267,7 +266,8 @@ def LLM_Chat():
                 current year is {datetime.now().year}. If the answers contain a lot of 
                 number or data please give the answers with markdown table else in string.
                 Please use commas when showing answers with large number, to make it easier
-                for reader to read. only use DuckDuckGoSearchResults as last resource.
+                for reader to read. Only use DuckDuckGoSearchResults as super very last resource.
+                Never give percentages change unless specifictly asked.
                 """,
             ),
             ("ai", "{chat_history}"),
@@ -288,17 +288,17 @@ def LLM_Chat():
     agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, memory=memory, handle_parsing_errors=True)
     return agent_executor
 
-query_1 = "What are the top 5 companies by transaction volume on the first of this month?"
-query_2 = "What are the most traded stock yesterday?"
-query_3 = "What are the top 7 most traded stocks between 6th June to 10th June this year?"
-query_4 = "What are the top 3 companies by transaction volume over the last 7 days?"
-query_5 = "Based on the closing prices of BBCA between 1st and 30th of June 2024, are we seeing an uptrend or downtrend? Try to explain why."
-query_6 = "What is the company with the largest market cap between BBCA and BREN? For said company, retrieve the email, phone number, listing date and website for further research."
-query_7 = "What is the performance of GOTO (symbol: GOTO) since its IPO listing?"
-query_8 = "If i had invested into GOTO vs BREN on their respective IPO listing date, which one would have given me a better return over a 90 day horizon?"
+# query_1 = "What are the top 5 companies by transaction volume on the first of this month?"
+# query_2 = "What are the most traded stock yesterday?"
+# query_3 = "What are the top 7 most traded stocks between 6th June to 10th June this year?"
+# query_4 = "What are the top 3 companies by transaction volume over the last 7 days?"
+# query_5 = "Based on the closing prices of BBCA between 1st and 30th of June 2024, are we seeing an uptrend or downtrend? Try to explain why."
+# query_6 = "What is the company with the largest market cap between BBCA and BREN? For said company, retrieve the email, phone number, listing date and website for further research."
+# query_7 = "What is the performance of GOTO (symbol: GOTO) since its IPO listing?"
+# query_8 = "If i had invested into GOTO vs BREN on their respective IPO listing date, which one would have given me a better return over a 90 day horizon?"
 
 
-queries = [query_1, query_2, query_3, query_4, query_5, query_6, query_7, query_8]
+# queries = [query_1, query_2, query_3, query_4, query_5, query_6, query_7, query_8]
 
 # for query in queries:
 #     print("Question:", query)
