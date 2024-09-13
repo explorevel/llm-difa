@@ -129,7 +129,7 @@ def get_performance_since_ipo(stock: str) -> str:
     """
     
     # Iterate through each key in the dictionary
-    data = json.loads(data)
+    data = json.loads(retrieve_from_endpoint(url))
     for key in data:
         # Check if the key starts with "chg_" and is numeric
         cond1 = key.startswith("chg_")
@@ -139,7 +139,7 @@ def get_performance_since_ipo(stock: str) -> str:
             data[key] = data[key] * 100
     
     url = f"https://api.sectors.app/v1/listing-performance/{stock.upper()}/"
-    return convert_changes(retrieve_from_endpoint(url))
+    return data
 
 @tool
 def get_top_companies_by_tx_volume(start_date: str, end_date: str, top_n: int = 5) -> str:
