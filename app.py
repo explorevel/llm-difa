@@ -128,6 +128,7 @@ def get_performance_since_ipo(stock: str) -> str:
     30 days percentages change etc.
     """
     
+    url = f"https://api.sectors.app/v1/listing-performance/{stock.upper()}/"
     # Iterate through each key in the dictionary
     data = json.loads(retrieve_from_endpoint(url))
     for key in data:
@@ -138,7 +139,6 @@ def get_performance_since_ipo(stock: str) -> str:
             # Multiply the value by 100
             data[key] = data[key] * 100
     
-    url = f"https://api.sectors.app/v1/listing-performance/{stock.upper()}/"
     return data
 
 @tool
