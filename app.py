@@ -1,7 +1,7 @@
 import os
 import json
 import requests
-#from dotenv import load_dotenv
+from dotenv import load_dotenv
 
 from langchain_core.tools import tool
 #from langchain.agents import agent_types, initialize_agent, load_tools
@@ -36,8 +36,7 @@ with st.sidebar:
 
 # SECTORS_API_KEY = os.getenv("SECTORS_API_KEY")
 # GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-# CALENDAR_API_KEY = os.getenv("CALENDAR_API_KEY")
-CALENDAR_API_KEY = st.secrets["CALENDAR_API_KEY"]
+CALENDAR_API_KEY = os.getenv("CALENDAR_API_KEY")
 
 def retrieve_from_endpoint(url: str) -> dict:
     headers = {"Authorization": SECTORS_API_KEY}
@@ -128,17 +127,16 @@ def get_performance_since_ipo(stock: str) -> str:
     Get company performance since its IPO listing date including 7 days percentages change,
     30 days percentages change etc.
     """
-    def convert_changes(data):
-        # Iterate through each key in the dictionary
-        data = json.loads(data)
-        for key in data:
-            # Check if the key starts with "chg_" and is numeric
-            cond1 = key.startswith("chg_")
-            cond2 = type(data[key])==int or type(data[key])==float
-            if cond1 & cond2:
-                # Multiply the value by 100
-                data[key] = data[key] * 100
-        return data
+    
+    # Iterate through each key in the dictionary
+    data = json.loads(data)
+    for key in data:
+        # Check if the key starts with "chg_" and is numeric
+        cond1 = key.startswith("chg_")
+        cond2 = type(data[key])==int or type(data[key])==float
+        if cond1 & cond2:
+            # Multiply the value by 100
+            data[key] = data[key] * 100
     
     url = f"https://api.sectors.app/v1/listing-performance/{stock.upper()}/"
     return convert_changes(retrieve_from_endpoint(url))
@@ -289,14 +287,14 @@ def LLM_Chat():
     agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True, memory=memory, handle_parsing_errors=True)
     return agent_executor
 
-query_1 = "What are the top 3 companies by transaction volume over the last 7 days?"
-query_2 = "Based on the closing prices of BBCA between 1st and 30th of June 2024, are we seeing an uptrend or downtrend? Try to explain why."
-query_3 = "What is the company with the largest market cap between BBCA and BREN? For said company, retrieve the email, phone number, listing date and website for further research."
-query_4 = "What is the performance of GOTO (symbol: GOTO) since its IPO listing?"
-query_5 = "If i had invested into GOTO vs BREN on their respective IPO listing date, which one would have given me a better return over a 90 day horizon?"
-query_6 = "What are the top 5 companies by transaction volume on the first of this month?"
-query_7 = "What are the most traded stock yesterday?"
-query_8 = "What are the top 7 most traded stocks between 6th June to 10th June this year?"
+query_1 = "What are the top 5 companies by transaction volume on the first of this month?"
+query_2 = "What are the most traded stock yesterday?"
+query_3 = "What are the top 7 most traded stocks between 6th June to 10th June this year?"
+query_4 = "What are the top 3 companies by transaction volume over the last 7 days?"
+query_5 = "Based on the closing prices of BBCA between 1st and 30th of June 2024, are we seeing an uptrend or downtrend? Try to explain why."
+query_6 = "What is the company with the largest market cap between BBCA and BREN? For said company, retrieve the email, phone number, listing date and website for further research."
+query_7 = "What is the performance of GOTO (symbol: GOTO) since its IPO listing?"
+query_8 = "If i had invested into GOTO vs BREN on their respective IPO listing date, which one would have given me a better return over a 90 day horizon?"
 
 
 queries = [query_1, query_2, query_3, query_4, query_5, query_6, query_7, query_8]
